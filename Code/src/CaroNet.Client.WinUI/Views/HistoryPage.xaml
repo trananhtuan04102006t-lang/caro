@@ -1,0 +1,106 @@
+<Page
+    x:Class="CaroNet.Client.WinUI.Views.HistoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button
+            Grid.Row="0"
+            Content="Quay lại"
+            HorizontalAlignment="Left"
+            Click="BackButton_Click"/>
+
+        <TextBlock
+            Grid.Row="1"
+            Text="Match History"
+            FontSize="28"
+            FontWeight="Bold"
+            Margin="0,10,0,10"/>
+
+        <ProgressRing
+            x:Name="LoadingRing"
+            Grid.Row="2"
+            Width="40"
+            Height="40"
+            HorizontalAlignment="Center"
+            Visibility="Collapsed"/>
+
+        <TextBlock
+            x:Name="EmptyText"
+            Grid.Row="3"
+            Text="Chưa có trận đấu nào."
+            HorizontalAlignment="Center"
+            Visibility="Collapsed"
+            Margin="0,10"/>
+
+        <ListView
+    x:Name="HistoryList"
+    ItemsSource="{Binding Matches}"
+    Grid.Row="4">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+
+                    <Border
+                Margin="0,0,0,12"
+                Padding="12"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CornerRadius="8">
+
+                        <StackPanel Spacing="6">
+
+                            <TextBlock
+                        FontSize="18"
+                        FontWeight="Bold">
+                        <Run Text="{Binding PlayerX}" />
+                        <Run Text=" vs " />
+                        <Run Text="{Binding PlayerO}" />
+                            </TextBlock>
+
+                            <TextBlock>
+                        <Run Text="Player X: " />
+                        <Run Text="{Binding PlayerX}" />
+                            </TextBlock>
+
+                            <TextBlock>
+                        <Run Text="Player O: " />
+                        <Run Text="{Binding PlayerO}" />
+                            </TextBlock>
+
+                            <TextBlock>
+                        <Run Text="Winner: " />
+                        <Run Text="{Binding Winner}" />
+                            </TextBlock>
+
+                            <TextBlock>
+                        <Run Text="Moves: " />
+                        <Run Text="{Binding MoveCount}" />
+                            </TextBlock>
+
+                            <TextBlock>
+                        <Run Text="Time: " />
+                        <Run Text="{Binding PlayedAt}" />
+                            </TextBlock>
+
+                        </StackPanel>
+
+                    </Border>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+    </Grid>
+</Page>

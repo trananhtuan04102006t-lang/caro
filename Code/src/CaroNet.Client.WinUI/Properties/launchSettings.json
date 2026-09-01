@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CaroNet (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "CaroNet (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

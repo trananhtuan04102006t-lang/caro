@@ -1,0 +1,69 @@
+name: Bug
+description: Báo lỗi trong CaroNet
+title: "[Bug]: "
+labels: ["bug", "needs-review"]
+body:
+  - type: textarea
+    id: current
+    attributes:
+      label: Hiện tượng lỗi
+      description: Mô tả lỗi đang xảy ra.
+      placeholder: "Ví dụ: Client A đánh một ô nhưng Client B không nhận được cập nhật bàn cờ."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Kết quả mong đợi
+      description: Đáng ra chương trình phải hoạt động như thế nào?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Các bước tái hiện
+      value: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Mảng nghi ngờ
+      options:
+        - game
+        - protocol
+        - server
+        - client-net
+        - ui
+        - ui-contract
+        - storage
+        - unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log hoặc ảnh chụp
+      description: Dán log, test output hoặc kéo thả ảnh vào issue.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Môi trường
+      value: |
+        - OS:
+        - .NET SDK:
+        - Branch:
+        - Commit:
+    validations:
+      required: true

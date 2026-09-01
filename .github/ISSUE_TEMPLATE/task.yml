@@ -1,0 +1,140 @@
+name: Task
+description: Tạo task phát triển cho CaroNet
+title: "[Task]: "
+labels: ["needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Dùng template này cho mọi task code, test, UI, storage, protocol, server, client hoặc tài liệu kỹ thuật.
+        Task chỉ được tính Done khi có PR/evidence và owner giải thích được phần mình làm.
+
+  - type: input
+    id: goal
+    attributes:
+      label: Mục tiêu
+      description: Task này cần hoàn thành điều gì trong một câu?
+      placeholder: "Ví dụ: Thêm rule engine kiểm tra thắng 5 quân liên tiếp"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Độ ưu tiên
+      description: P0 là bắt buộc cho demo, P1 là nên có, P2 là bonus.
+      options:
+        - P0
+        - P1
+        - P2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Mảng công việc
+      options:
+        - game
+        - protocol
+        - server
+        - client-net
+        - ui
+        - ui-contract
+        - storage
+        - test
+        - docs
+        - integration
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Phạm vi công việc
+      description: Ghi rõ làm gì và không làm gì để tránh lan scope.
+      value: |
+        Làm:
+        - 
+
+        Không làm:
+        - 
+    validations:
+      required: true
+
+  - type: textarea
+    id: files
+    attributes:
+      label: File hoặc thư mục dự kiến
+      description: Liệt kê file/thư mục sẽ tạo hoặc sửa.
+      placeholder: |
+        - Code/src/CaroNet.Shared/Game/...
+        - Code/tests/CaroNet.Shared.Tests/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Deliverables
+      description: Kết quả cụ thể phải có sau task này.
+      value: |
+        - 
+        - 
+        - 
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Tiêu chí hoàn thành
+      description: Checklist để leader review và kéo task sang Done.
+      value: |
+        - [ ] Có branch riêng từ develop
+        - [ ] Có Pull Request link issue này
+        - [ ] Build pass
+        - [ ] Test hoặc manual evidence pass
+        - [ ] Không phá flow P0
+        - [ ] Cập nhật docs nếu đổi protocol/model
+        - [ ] Owner giải thích được trong vấn đáp 3 phút
+    validations:
+      required: true
+
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Cách test hoặc evidence
+      description: Ghi lệnh test, manual steps, log hoặc screenshot cần có.
+      placeholder: |
+        Lệnh:
+        dotnet test .\Code\CaroNet.slnx -c Debug -p:Platform=x64
+
+        Manual:
+        1. Chạy server
+        2. Mở 2 client
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: defense
+    attributes:
+      label: Câu hỏi vấn đáp bắt buộc
+      description: Owner phải trả lời được các câu này khi review.
+      value: |
+        1. Input và output của phần này là gì?
+        2. Lỗi thường gặp là gì và code xử lý ở đâu?
+        3. Nếu AI có hỗ trợ, bạn đã kiểm chứng bằng cách nào?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: agreement
+    attributes:
+      label: Cam kết của owner
+      options:
+        - label: Tôi hiểu rằng task chưa Done nếu chưa có PR/evidence.
+          required: true
+        - label: Tôi hiểu rằng dùng AI vẫn phải tự giải thích và chịu trách nhiệm.
+          required: true

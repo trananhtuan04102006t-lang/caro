@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>CaroNet AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e293b
+                );
+
+            color: #f8fafc;
+        }
+
+        .container {
+            width: min(1100px, 95%);
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 42px;
+        }
+
+        header p {
+            margin-top: 8px;
+            color: #94a3b8;
+            font-size: 17px;
+        }
+
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .board-card,
+        .control-card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #334155;
+            border-radius: 18px;
+            padding: 20px;
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .board-wrapper {
+            overflow: auto;
+        }
+
+        #board {
+            display: grid;
+
+            grid-template-columns:
+                repeat(15, 38px);
+
+            grid-template-rows:
+                repeat(15, 38px);
+
+            width: max-content;
+
+            margin: 0 auto;
+
+            background: #e5e7eb;
+            border: 3px solid #475569;
+        }
+
+        .cell {
+            width: 38px;
+            height: 38px;
+
+            border-right: 1px solid #94a3b8;
+            border-bottom: 1px solid #94a3b8;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            background: #f8fafc;
+
+            transition:
+                background 0.12s,
+                transform 0.12s;
+        }
+
+        .cell:hover {
+            background: #dbeafe;
+        }
+
+        .cell.x {
+            color: #dc2626;
+        }
+
+        .cell.o {
+            color: #2563eb;
+        }
+
+        .cell.last-move {
+            background: #fef08a;
+        }
+
+        .control-card h2 {
+            margin-top: 0;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        select,
+        button {
+            width: 100%;
+
+            padding: 11px 14px;
+
+            border-radius: 10px;
+            border: 1px solid #475569;
+
+            font-size: 15px;
+        }
+
+        select {
+            background: #1e293b;
+            color: white;
+        }
+
+        button {
+            cursor: pointer;
+            font-weight: 600;
+
+            background: #2563eb;
+            color: white;
+
+            border: none;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        button.secondary {
+            margin-top: 10px;
+            background: #475569;
+        }
+
+        button.secondary:hover {
+            background: #334155;
+        }
+
+        .status-box {
+            padding: 14px;
+
+            border-radius: 10px;
+
+            background: #1e293b;
+
+            border: 1px solid #334155;
+        }
+
+        .status-title {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        #status {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .info {
+            margin-top: 20px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #334155;
+
+            color: #94a3b8;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .legend span {
+            font-weight: 600;
+        }
+
+        .legend-x {
+            color: #f87171;
+        }
+
+        .legend-o {
+            color: #60a5fa;
+        }
+
+        .thinking {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        @media (max-width: 850px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .control-card {
+                width: min(500px, 100%);
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>🎮 CaroNet AI</h1>
+
+        <p>
+            Người chơi vs Máy —
+            Minimax + Alpha-Beta Pruning
+        </p>
+    </header>
+
+
+    <div class="game-layout">
+
+        <!-- ========================= -->
+        <!-- BOARD -->
+        <!-- ========================= -->
+
+        <div class="board-card">
+
+            <div class="board-wrapper">
+                <div id="board"></div>
+            </div>
+
+            <div class="legend">
+                <span class="legend-x">
+                    X — Người chơi
+                </span>
+
+                <span class="legend-o">
+                    O — AI
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- CONTROLS -->
+        <!-- ========================= -->
+
+        <div class="control-card">
+
+            <h2>⚙️ Điều khiển</h2>
+
+
+            <div class="control-group">
+
+                <label for="difficulty">
+                    Độ khó của AI
+                </label>
+
+                <select id="difficulty">
+
+                    <option value="Easy">
+                        Easy
+                    </option>
+
+                    <option value="Medium" selected>
+                        Medium
+                    </option>
+
+                    <option value="Hard">
+                        Hard
+                    </option>
+
+                    <option value="Expert">
+                        Expert
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button onclick="startGame()">
+                🎮 Ván mới
+            </button>
+
+
+            <button
+                class="secondary"
+                onclick="resetGame()">
+
+                🔄 Chơi lại
+
+            </button>
+
+
+            <div
+                class="status-box"
+                style="margin-top:20px">
+
+                <div class="status-title">
+                    Trạng thái
+                </div>
+
+                <div id="status">
+                    Chưa bắt đầu
+                </div>
+
+            </div>
+
+
+            <div
+                class="status-box"
+                style="margin-top:12px">
+
+                <div class="status-title">
+                    AI
+                </div>
+
+                <div id="aiInfo">
+                    Minimax + Alpha-Beta
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <strong>Cách chơi</strong>
+
+                <br>
+
+                1. Chọn độ khó AI.
+
+                <br>
+
+                2. Nhấn "Ván mới".
+
+                <br>
+
+                3. Bạn chơi quân X.
+
+                <br>
+
+                4. Click vào một ô trên bàn cờ.
+
+                <br>
+
+                5. AI sẽ suy nghĩ và đánh quân O.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // ========================================
+    // GAME STATE
+    // ========================================
+
+    let gameId = null;
+
+    let boardSize = 15;
+
+    let isThinking = false;
+
+
+    // ========================================
+    // ELEMENTS
+    // ========================================
+
+    const boardElement =
+        document.getElementById("board");
+
+    const statusElement =
+        document.getElementById("status");
+
+    const difficultyElement =
+        document.getElementById("difficulty");
+
+    const aiInfoElement =
+        document.getElementById("aiInfo");
+
+
+    // ========================================
+    // CREATE BOARD
+    // ========================================
+
+    function createBoard(board) {
+
+        boardElement.innerHTML = "";
+
+        boardSize = board.length;
+
+        boardElement.style.gridTemplateColumns =
+            `repeat(${boardSize}, 38px)`;
+
+        boardElement.style.gridTemplateRows =
+            `repeat(${boardSize}, 38px)`;
+
+
+        for (let row = 0; row < boardSize; row++) {
+
+            for (
+                let column = 0;
+                column < boardSize;
+                column++
+            ) {
+
+                const cell =
+                    document.createElement("div");
+
+                cell.className = "cell";
+
+                const value =
+                    board[row][column];
+
+
+                if (value === "X") {
+
+                    cell.textContent = "X";
+
+                    cell.classList.add("x");
+
+                }
+                else if (value === "O") {
+
+                    cell.textContent = "O";
+
+                    cell.classList.add("o");
+
+                }
+
+
+                cell.dataset.row = row;
+                cell.dataset.column = column;
+
+
+                cell.addEventListener(
+                    "click",
+                    () => playMove(row, column)
+                );
+
+
+                boardElement.appendChild(cell);
+            }
+        }
+    }
+
+
+    // ========================================
+    // START GAME
+    // ========================================
+
+    async function startGame() {
+
+        try {
+
+            isThinking = false;
+
+            const difficulty =
+                difficultyElement.value;
+
+
+            statusElement.textContent =
+                "Đang tạo ván cờ...";
+
+
+            const response =
+                await fetch(
+                    "/api/game/start",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            difficulty:
+                                difficulty
+                        })
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Không thể tạo ván cờ."
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            gameId = data.gameId;
+
+
+            createBoard(data.board);
+
+
+            aiInfoElement.textContent =
+                `Minimax + Alpha-Beta — ${data.difficulty}`;
+
+
+            updateStatus(data.status);
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            statusElement.textContent =
+                "❌ Không thể kết nối Server.";
+
+        }
+    }
+
+
+    // ========================================
+    // PLAYER MOVE
+    // ========================================
+
+    async function playMove(row, column) {
+
+        if (!gameId)
+            return;
+
+
+        if (isThinking)
+            return;
+
+
+        isThinking = true;
+
+        boardElement.classList.add("thinking");
+
+
+        statusElement.textContent =
+            "Bạn đang đánh...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/game/move",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            gameId: gameId,
+
+                            row: row,
+
+                            column: column
+
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                alert(
+                    data.message ||
+                    "Nước đi không hợp lệ."
+                );
+
+                return;
+            }
+
+
+            createBoard(data.board);
+
+
+            // Highlight player move
+            if (data.playerMove) {
+
+                highlightMove(
+                    data.playerMove.row,
+                    data.playerMove.column
+                );
+            }
+
+
+            // Highlight AI move
+            if (data.aiMove) {
+
+                highlightMove(
+                    data.aiMove.row,
+                    data.aiMove.column
+                );
+            }
+
+
+            updateStatus(data.status);
+
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            statusElement.textContent =
+                "❌ Có lỗi khi gửi nước đi.";
+
+        }
+        finally {
+
+            isThinking = false;
+
+            boardElement.classList.remove(
+                "thinking"
+            );
+        }
+    }
+
+
+    // ========================================
+    // RESET GAME
+    // ========================================
+
+    async function resetGame() {
+
+        if (!gameId) {
+
+            await startGame();
+
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/api/game/${gameId}/reset`,
+                    {
+                        method: "POST"
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            createBoard(data.board);
+
+            updateStatus(data.status);
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            statusElement.textContent =
+                "❌ Không thể reset game.";
+        }
+    }
+
+
+    // ========================================
+    // STATUS
+    // ========================================
+
+    function updateStatus(status) {
+
+        switch (status) {
+
+            case "Playing":
+
+                statusElement.textContent =
+                    "🟢 Đang chơi — tới lượt bạn";
+
+                break;
+
+
+            case "XWon":
+
+                statusElement.textContent =
+                    "🎉 Bạn thắng!";
+
+                break;
+
+
+            case "OWon":
+
+                statusElement.textContent =
+                    "🤖 AI thắng!";
+
+                break;
+
+
+            case "Draw":
+
+                statusElement.textContent =
+                    "🤝 Hòa!";
+
+                break;
+
+
+            default:
+
+                statusElement.textContent =
+                    status;
+        }
+    }
+
+
+    // ========================================
+    // HIGHLIGHT MOVE
+    // ========================================
+
+    function highlightMove(row, column) {
+
+        const index =
+            row * boardSize + column;
+
+
+        const cell =
+            boardElement.children[index];
+
+
+        if (cell) {
+
+            cell.classList.add(
+                "last-move"
+            );
+
+
+            setTimeout(() => {
+
+                cell.classList.remove(
+                    "last-move"
+                );
+
+            }, 800);
+        }
+    }
+
+
+    // ========================================
+    // INITIAL BOARD
+    // ========================================
+
+    createBoard(
+        Array.from(
+            { length: 15 },
+            () => ".".repeat(15)
+        )
+    );
+
+</script>
+
+</body>
+</html>

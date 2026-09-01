@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CaroNet.Shared\CaroNet.Shared.csproj" />
+    <ProjectReference Include="..\..\src\CaroNet.Storage\CaroNet.Storage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Services\ClientMessageReceivedEventArgs.cs" Link="Services\ClientMessageReceivedEventArgs.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Services\IClientConnection.cs" Link="Services\IClientConnection.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Services\IGameClientService.cs" Link="Services\IGameClientService.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Services\SocketGameClientService.cs" Link="Services\SocketGameClientService.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Services\SocketClientConnection.cs" Link="Services\SocketClientConnection.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Services\AppServices.cs" Link="Services\AppServices.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Validation\PlayerNameValidator.cs" Link="Validation\PlayerNameValidator.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Validation\RoomIdValidator.cs" Link="Validation\RoomIdValidator.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\ViewModels\GameViewModel.cs" Link="ViewModels\GameViewModel.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\ViewModels\MainMenuViewModel.cs" Link="ViewModels\MainMenuViewModel.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\ViewModels\HistoryViewModel.cs" Link="ViewModels\HistoryViewModel.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Models\BestRecordItem.cs" Link="Models\BestRecordItem.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Models\MatchSummary.cs" Link="Models\MatchSummary.cs" />
+    <Compile Include="..\..\src\CaroNet.Client.WinUI\Models\PlayerRecordSummary.cs" Link="Models\PlayerRecordSummary.cs" />
+  </ItemGroup>
+
+</Project>

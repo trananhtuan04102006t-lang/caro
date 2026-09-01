@@ -1,0 +1,33 @@
+# .NET build
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+
+# JetBrains Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+
+# Test results
+**/TestResults/
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
+.env.*
+
+# Publish
+**/publish/

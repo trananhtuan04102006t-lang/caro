@@ -1,0 +1,70 @@
+name: dotnet-build-test
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dotnet-build-test-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  SOLUTION_PATH: './Code/CaroNet.slnx'
+  BUILD_CONFIGURATION: 'Debug'
+  BUILD_PLATFORM: 'x64'
+
+jobs:
+  build-test:
+    name: Build and test CaroNet
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Show .NET info
+        run: dotnet --info
+
+      - name: Restore solution
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
+
+      - name: Build solution
+        run: >
+          dotnet build ${{ env.SOLUTION_PATH }}
+          --configuration ${{ env.BUILD_CONFIGURATION }}
+          -p:Platform=${{ env.BUILD_PLATFORM }}
+          --no-restore
+          --verbosity minimal
+
+      - name: Test solution
+        run: >
+          dotnet test ${{ env.SOLUTION_PATH }}
+          --configuration ${{ env.BUILD_CONFIGURATION }}
+          -p:Platform=${{ env.BUILD_PLATFORM }}
+          --no-build
+          --verbosity minimal
+          --logger "trx;LogFileName=caronet-tests.trx"
+          --results-directory ./TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: caronet-test-results
+          path: ./TestResults

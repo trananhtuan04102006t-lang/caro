@@ -1,0 +1,26 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="src/CaroNet.Client.WinUI/CaroNet.Client.WinUI.csproj">
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+      <Deploy />
+    </Project>
+    <Project Path="src/CaroNet.Server.Host/CaroNet.Server.Host.csproj" />
+    <Project Path="src/CaroNet.Shared/CaroNet.Shared.csproj" />
+    <Project Path="src/CaroNet.Storage/CaroNet.Storage.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CaroNet.Client.WinUI.Tests/CaroNet.Client.WinUI.Tests.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="tests/CaroNet.Storage.Tests/CaroNet.Storage.Tests.csproj" />
+    <Project Path="tests/CaroNet.Shared.Tests/CaroNet.Shared.Tests.csproj" />
+    <Project Path="tests/CaroNet.Server.Host.Tests/CaroNet.Server.Host.Tests.csproj" />
+  </Folder>
+</Solution>

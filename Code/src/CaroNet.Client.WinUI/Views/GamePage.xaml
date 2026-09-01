@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="CaroNet.Client.WinUI.Views.GamePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CaroNet.Client.WinUI.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <local:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+        <local:ChatBubbleAlignmentConverter x:Key="ChatBubbleAlignmentConverter"/>
+        <local:ChatBubbleBackgroundConverter x:Key="ChatBubbleBackgroundConverter"/>
+        <local:ChatBubbleForegroundConverter x:Key="ChatBubbleForegroundConverter"/>
+        <local:BoardMarkForegroundConverter x:Key="BoardMarkForegroundConverter"/>
+        <Style x:Key="MaterialIconTextStyle"
+               TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="ms-appx:///Assets/Fonts/MaterialSymbolsRounded.ttf#Material Symbols Rounded"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          Padding="10">
+        <Grid RowDefinitions="92,*"
+              ColumnDefinitions="*,360"
+              RowSpacing="10"
+              ColumnSpacing="10">
+
+            <Border Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="18,0">
+                <Grid ColumnDefinitions="*,160,*"
+                      ColumnSpacing="16">
+
+                    <Border Grid.Column="0"
+                            BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="14,10"
+                            Opacity="{Binding MyHeaderOpacity}">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="BẠN"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"/>
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="8">
+                                <TextBlock Text="{Binding PlayerName}"
+                                           Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                           FontSize="20"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding PlayerSymbol}"
+                                           Foreground="{Binding PlayerSymbol, Converter={StaticResource BoardMarkForegroundConverter}}"
+                                           FontSize="20"
+                                           FontWeight="Bold"/>
+                            </StackPanel>
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="10">
+                                <TextBlock Text="{Binding MyTurnLabel}"
+                                           Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock x:Name="MyTimerTextBlock"
+                                           Grid.Column="1"
+                                           Text="--"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Right"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Grid Grid.Column="1"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          RowDefinitions="Auto,Auto"
+                          RowSpacing="2">
+                        <TextBlock Text="{Binding ScoreText}"
+                                   Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                   FontSize="34"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
+                        <StackPanel Grid.Row="1"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <TextBlock Text="{Binding RoomId}"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                            <Button x:Name="CopyRoomIdButton"
+                                    Click="CopyRoomIdButton_Click"
+                                    MinWidth="24"
+                                    MinHeight="24"
+                                    Width="28"
+                                    Height="28"
+                                    Padding="0"
+                                    CornerRadius="6"
+                                    ToolTipService.ToolTip="Sao chép mã phòng">
+                                <TextBlock x:Name="CopyRoomIdIconTextBlock"
+                                           Text="content_copy"
+                                           Style="{StaticResource MaterialIconTextStyle}"
+                                           FontSize="16"/>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Grid.Column="2"
+                            BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="14,10"
+                            Opacity="{Binding OpponentHeaderOpacity}">
+                        <Grid RowDefinitions="Auto,Auto,Auto"
+                              RowSpacing="2">
+                            <TextBlock Grid.Row="0"
+                                       Text="ĐỐI THỦ"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Right"/>
+                            <StackPanel Grid.Row="1"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        Spacing="8">
+                                <TextBlock Text="{Binding OpponentSymbol}"
+                                           Foreground="{Binding OpponentSymbol, Converter={StaticResource BoardMarkForegroundConverter}}"
+                                           FontSize="20"
+                                           FontWeight="Bold"/>
+                                <TextBlock Text="{Binding OpponentName}"
+                                           Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                           FontSize="20"
+                                           FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <Grid Grid.Row="2"
+                                  ColumnDefinitions="Auto,*"
+                                  ColumnSpacing="10">
+                                <TextBlock x:Name="OpponentTimerTextBlock"
+                                           Text="--"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding OpponentTurnLabel}"
+                                           Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Right"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Main Game Area -->
+            <Border Grid.Row="1"
+                    Grid.Column="0"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="22"
+                    Padding="24">
+                <Grid RowDefinitions="Auto,*"
+                      RowSpacing="18">
+
+                    <!-- Turn Banner -->
+                    <Border x:Name="TurnBanner"
+                            Grid.Row="0"
+                            Background="#E8F5E9"
+                            CornerRadius="10"
+                            Padding="16,12"
+                            BorderThickness="1"
+                            BorderBrush="#A5D6A7">
+                        <TextBlock x:Name="TurnBannerTextBlock"
+                                   Text="{Binding TurnMessage}"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center"
+                                   Foreground="#1B5E20"/>
+                    </Border>
+
+                    <!-- Board -->
+                    <Viewbox Grid.Row="1"
+                             Stretch="Uniform">
+                        <Border Width="620"
+                                Height="620"
+                                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="16"
+                                Padding="10">
+                            <Grid x:Name="BoardGrid"
+                                  Background="{ThemeResource LayerFillColorDefaultBrush}"/>
+                        </Border>
+                    </Viewbox>
+                </Grid>
+            </Border>
+
+            <!-- Right Sidebar -->
+            <Grid Grid.Row="1"
+                  Grid.Column="1"
+                  RowDefinitions="220,Auto,*,76"
+                  RowSpacing="16">
+
+                <!-- Match Info -->
+                <Border Grid.Row="0"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="22"
+                        Padding="20">
+                    <StackPanel Spacing="16">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Match Info"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       FontSize="21"
+                                       FontWeight="SemiBold"/>
+                        </StackPanel>
+                        <Grid RowDefinitions="Auto,Auto,Auto"
+                              RowSpacing="10">
+                            <Grid Grid.Row="0"
+                                  ColumnDefinitions="*,Auto">
+                                <TextBlock Text="Your symbol"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           FontSize="14"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding PlayerSymbol}"
+                                           Foreground="{Binding PlayerSymbol, Converter={StaticResource BoardMarkForegroundConverter}}"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"/>
+                            </Grid>
+                            <Grid Grid.Row="1"
+                                  ColumnDefinitions="*,Auto">
+                                <TextBlock Text="Room"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           FontSize="14"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding RoomId}"
+                                           Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"/>
+                            </Grid>
+                            <Grid Grid.Row="2"
+                                  ColumnDefinitions="*,Auto">
+                                <TextBlock Text="Current turn"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           FontSize="14"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding CurrentTurnSymbol}"
+                                           Foreground="{Binding CurrentTurnSymbol, Converter={StaticResource BoardMarkForegroundConverter}}"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="1"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="14"
+                        Padding="10">
+                    <Grid RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="*,*"
+                          RowSpacing="8"
+                          ColumnSpacing="8">
+                        <Button x:Name="DrawOfferButton"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Click="DrawOfferButton_Click"
+                                IsEnabled="{Binding CanUseMatchActions}"
+                                HorizontalAlignment="Stretch"
+                                MinHeight="42"
+                                CornerRadius="10">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="8">
+                                <TextBlock Text="handshake"
+                                           Style="{StaticResource MaterialIconTextStyle}"/>
+                                <TextBlock Text="Xin hòa"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="ResignButton"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Click="ResignButton_Click"
+                                IsEnabled="{Binding CanUseMatchActions}"
+                                Background="#B3261E"
+                                Foreground="White"
+                                HorizontalAlignment="Stretch"
+                                MinHeight="42"
+                                CornerRadius="10">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="8">
+                                <TextBlock Text="flag"
+                                           Style="{StaticResource MaterialIconTextStyle}"/>
+                                <TextBlock Text="Đầu hàng"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="BackToMenuButton"
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
+                                Click="BackToMenuButton_Click"
+                                HorizontalAlignment="Stretch"
+                                MinHeight="42"
+                                CornerRadius="10"
+                                Visibility="{Binding IsGameEnded, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Spacing="8">
+                                <TextBlock Text="home"
+                                           Style="{StaticResource MaterialIconTextStyle}"/>
+                                <TextBlock Text="Về menu"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Grid Grid.Row="1"
+                              Grid.ColumnSpan="2"
+                              ColumnDefinitions="*,*"
+                              ColumnSpacing="8"
+                              Visibility="{Binding IsGameEnded, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Button x:Name="RematchButton"
+                                    Grid.Column="0"
+                                    Click="RematchButton_Click"
+                                    IsEnabled="{Binding CanRequestRematch}"
+                                    HorizontalAlignment="Stretch"
+                                    MinHeight="42"
+                                    CornerRadius="10">
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Center"
+                                            Spacing="8">
+                                    <TextBlock Text="refresh"
+                                               Style="{StaticResource MaterialIconTextStyle}"/>
+                                    <TextBlock Text="{Binding RematchActionText}"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="BackToMenuEndedButton"
+                                    Grid.Column="1"
+                                    Click="BackToMenuButton_Click"
+                                    HorizontalAlignment="Stretch"
+                                    MinHeight="42"
+                                    CornerRadius="10">
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Center"
+                                            Spacing="8">
+                                    <TextBlock Text="home"
+                                               Style="{StaticResource MaterialIconTextStyle}"/>
+                                    <TextBlock Text="Về menu"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                        <TextBlock Grid.Row="2"
+                                   Grid.ColumnSpan="2"
+                                   Text="{Binding RematchHint}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Visibility="{Binding IsGameEnded, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="2"
+        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+        BorderThickness="1"
+        CornerRadius="22"
+        Padding="20">
+
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,8">
+                            <TextBlock Text="Chat"
+                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                       FontSize="21"
+                       FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding ConnectionStatus}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       FontSize="13"
+                       TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <TextBlock x:Name="EmptyStateTextBlock"
+                   Grid.Row="1"
+                   Text="Chưa có tin nhắn"
+                   Foreground="{ThemeResource TextFillColorDisabledBrush}"
+                   FontSize="14"
+                   FontStyle="Italic"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+
+                        <ListView x:Name="ChatListView"
+                  Grid.Row="1"
+                  ItemsSource="{Binding ChatMessages}"
+                  SelectionMode="None"
+                  Background="Transparent"
+                  BorderThickness="0">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="MinHeight" Value="0"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,4"
+                                          HorizontalAlignment="Stretch">
+                                        <Border MaxWidth="282"
+                                                Padding="10,8"
+                                                CornerRadius="12"
+                                                HorizontalAlignment="{Binding Converter={StaticResource ChatBubbleAlignmentConverter}}"
+                                                Background="{Binding Converter={StaticResource ChatBubbleBackgroundConverter}}">
+                                            <StackPanel Spacing="3">
+                                                <Grid ColumnDefinitions="*,Auto"
+                                                      ColumnSpacing="8"
+                                                      Visibility="{Binding IsSystemMessage, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                                                    <TextBlock Text="{Binding SenderName}"
+                                                               FontSize="12"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{Binding Converter={StaticResource ChatBubbleForegroundConverter}}"
+                                                               Opacity="0.82"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding TimeText}"
+                                                               FontSize="11"
+                                                               Foreground="{Binding Converter={StaticResource ChatBubbleForegroundConverter}}"
+                                                               Opacity="0.72"/>
+                                                </Grid>
+                                                <TextBlock Text="{Binding Message}"
+                                                           TextWrapping="WrapWholeWords"
+                                                           FontSize="14"
+                                                           Foreground="{Binding Converter={StaticResource ChatBubbleForegroundConverter}}"/>
+                                                <TextBlock Text="{Binding TimeText}"
+                                                           FontSize="11"
+                                                           HorizontalAlignment="Center"
+                                                           Foreground="{Binding Converter={StaticResource ChatBubbleForegroundConverter}}"
+                                                           Opacity="0.76"
+                                                           Visibility="{Binding IsSystemMessage, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <TextBlock Grid.Row="2"
+                   Text="{Binding ServerError}"
+                   Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Margin="0,6,0,0"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="3"
+        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+        BorderThickness="1"
+        CornerRadius="22"
+        Padding="12">
+
+                    <Grid ColumnDefinitions="*,52"
+          ColumnSpacing="10">
+
+                        <TextBox x:Name="ChatInputTextBox"
+                 Grid.Column="0"
+                 PlaceholderText="Nhập chat..."
+                 Text="{Binding ChatInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding IsChatInputEnabled}"
+                 KeyDown="ChatInputTextBox_KeyDown"
+                 FontSize="15"
+                 BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                 BorderThickness="1"
+                 CornerRadius="14"
+                 Padding="14,8"/>
+
+                        <Button x:Name="SendChatButton"
+                Grid.Column="1"
+                Click="SendChatButton_Click"
+                IsEnabled="{Binding IsSendButtonEnabled}"
+                MinWidth="44"
+                MinHeight="44"
+                CornerRadius="14"
+                ToolTipService.ToolTip="Gửi tin nhắn">
+                            <TextBlock Text="send"
+                                       Style="{StaticResource MaterialIconTextStyle}"/>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
