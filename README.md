@@ -34,14 +34,23 @@ CaroNet.Shared
      +-- MinimaxAiPlayer
      |
      +-- Alpha-Beta Pruning
-Chạy project
+
+## Chạy project
+
 1. Restore
+
 dotnet restore src/CaroNet.Web/CaroNet.Web.csproj
+
 2. Build
+
 dotnet build src/CaroNet.Web/CaroNet.Web.csproj
+
 3. Test
+
 dotnet test tests/CaroNet.Shared.Tests/CaroNet.Shared.Tests.csproj
+
 4. Chạy Web
+
 dotnet run --project src/CaroNet.Web/CaroNet.Web.csproj --urls "http://0.0.0.0:5079"
 
 Sau đó truy cập:
